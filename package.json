@@ -1,0 +1,26 @@
+{
+  "name": "node-js-connect-ethereum",
+  "version": "0.1.0",
+  "description": "A sample Node.js app for connecting ethereum",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "*",
+    "truffle-contract": "^2.0.5",
+    "web3": "^0.20.1"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "ethereum",
+    "blockchain"
+  ],
+  "author": "Kevin Leyssens",
+  "license": "MIT"
+}

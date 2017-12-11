@@ -1,0 +1,25 @@
+const express = require('express');
+
+const app = express();
+const bodyParser = require('body-parser');
+const blockchainService =require('./services/blockchain.service.js');
+const Web3 = require('web3');
+const accounts = require('./routes/accounts');
+const ballot = require('./routes/ballot');
+
+const port = process.env.port || 3100;
+
+app.use(bodyParser.json());
+
+
+app.use('/api/accounts',accounts);
+app.use('/api/ballot',ballot);
+
+app.get('/', (req, res) =>{
+  res.send('Service is running');
+})
+
+app.listen(port, () => {
+  console.log('started on port: ' + port );
+  blockchainService.init();
+});
