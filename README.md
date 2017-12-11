@@ -5,7 +5,7 @@ Demo with ethereumn nodejs and api's to call the contract function
 You'll need a local ethereum node running for this to work.
 
 # Deploy & interact
-Change the account and password in ./src/services/blockchain.service.js to your etherbase account and password.
+Change the account and password in the .env file.
 
 1. Start your local ethereum node. Be sure --RPC is enabled at port 8545
 2. Run the ``truffle migrate`` to deploy your contracts

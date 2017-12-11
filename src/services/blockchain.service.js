@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 var web3 = new Web3();
-const provider = new web3.providers.HttpProvider('http://localhost:8545', 0, "youretheraccount", "password");
+const provider = new web3.providers.HttpProvider('http://localhost:8545', 0, process.env.ETHERBASE,  process.env.PASSWORD);
 var account;
 var accounts;
 // Step 1: Get a contract into my application
