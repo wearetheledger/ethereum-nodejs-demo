@@ -18,6 +18,9 @@ app.use('/api/ballot',ballot);
 app.get('/', (req, res) =>{
   res.send('Service is running');
 })
+app.get('/api/hello', (req, res) => {
+  res.send({ express: 'Hello From Express' });
+});
 
 app.listen(port, () => {
   console.log('started on port: ' + port );
