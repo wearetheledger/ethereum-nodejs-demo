@@ -6,22 +6,20 @@ const bodyParser = require('body-parser');
 
 router.get('/', function(req, res) {
    blockchainService.winningProposal().then(function(result){
-    // res.setHeader('Content-Type', 'application/json');
-    res.send({"foo": "bar"});
-    //res.send("Winning proposal is: "+ result);
+     res.json(result);
   });
 });
 
 router.post('/vote/:id', function(req, res) {
    blockchainService.vote(req.params.id).then(function(result){
-    res.send("TransactionId: " +  result);
+    res.json(result);
   });
 });
 
-router.get('/vote/:id', function(req, res) {
+/*router.get('/vote/:id', function(req, res) {
  blockchainService.vote(req.params.id).then(function(result){
-  res.send("TransactionId: " +  result);
+  res.json(result);
 });
-});
+});*/
 
 module.exports = router;
