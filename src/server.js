@@ -6,7 +6,6 @@ const blockchainService =require('./services/blockchain.service.js');
 const Web3 = require('web3');
 const accounts = require('./routes/accounts');
 const ballot = require('./routes/ballot');
-// var ws = require('./ws')
 
 const port = process.env.port || 3100;
 
