@@ -1,23 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
+import logo from './white.svg';
 import './App.css';
-import {Accounts} from "../src/components/accounts";
-import {Voting} from "../src/components/voting";
+import { Accounts } from "../src/components/accounts";
+import { Voting } from "../src/components/voting";
+import { Events } from "../src/components/events";
+import { Segment, Grid, Container } from 'semantic-ui-react'
 
 class App extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state ={
+    this.state = {
       response: ''
     };
     this.handleNewVote = this.handleNewVote.bind(this);
   }
 
 
-   componentDidMount() {
+  componentDidMount() {
     this.getWinningProposal()
-      .then(res => this.setState({ response: res }))
+      // .then(res => this.setState({ response: res }))
+      .then(res => {
+        if(res === '0') {
+          this.setState({response: 'Ethereum'});
+      } else if (res === '1') {
+        this.setState({response: 'Hyperledger Fabric'});
+      }
+      })
       .catch(err => console.log(err));
   }
 
@@ -30,26 +40,68 @@ class App extends Component {
     return body;
   };
 
-  handleNewVote(){
+  handleNewVote(draw) {
+
+    if (draw){
+      this.setState({response: 'is a draw'});      
+    }else {
+
     this.getWinningProposal()
-    .then(res => this.setState({ response: res }))
+    .then(res => {
+      if(res === '0') {
+        this.setState({response: 'Ethereum'});
+    } else if (res === '1') {
+      this.setState({response: 'Hyperledger Fabric'});
+    }
+    })
     .catch(err => console.log(err));
   }
+}
 
   render() {
 
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Voting application</h1>
+         <a href="https://www.theledger.be" target="_blank"> <img src={logo} className="App-logo" alt="logo" /></a>
+          <h1 className="App-title">Voting application in favour of ethereum when it's a draw</h1>
+          <br></br>
         </header>
-        <div className="App-intro">
-        <h1>Winning proposal is {this.state.response}</h1>
-        </div>
-        <Accounts />
-        <div><br /></div>
-        <Voting winningproposal={this.handleNewVote}/>
+        <br></br>
+        <Container>
+        <Grid columns={1}>
+          <Grid.Row>
+            <Grid.Column>
+              <Segment>
+                <div >
+                  <h1>Winning proposal is {this.state.response}</h1>
+                </div>
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        <Grid columns={2}>
+          <Grid.Row>
+            <Grid.Column>
+
+              <Segment>
+                <Accounts />
+              </Segment>
+              <Segment>
+                <Events />
+              </Segment>
+            </Grid.Column>
+
+            <Grid.Column>
+
+              <Segment>
+                <Voting winningproposal={this.handleNewVote} />
+              </Segment>
+            </Grid.Column>
+
+          </Grid.Row>
+        </Grid>
+        </Container>
       </div>
     );
   }

@@ -16,10 +16,11 @@ router.post('/vote/:id', function(req, res) {
   });
 });
 
-/*router.get('/vote/:id', function(req, res) {
- blockchainService.vote(req.params.id).then(function(result){
-  res.json(result);
+
+router.get('/count/:id', function(req, res) {
+  blockchainService.getVoteCount(req.params.id).then(function(result){
+    res.json(result);
+ });
 });
-});*/
 
 module.exports = router;

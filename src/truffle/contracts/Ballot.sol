@@ -95,4 +95,10 @@ contract Ballot {
             }
         }
     }
+
+    function getVoteCount(uint8 proposal) public view returns (uint256 _votecount) {
+        return proposals[proposal].voteCount;
+    }
+
+
 }

@@ -29,17 +29,19 @@ module.exports = {
       }
     });
 
-    this.watchEvents();
+    this.watchEvents().then(function(result){
+      console.log(result);
+    });
   }, 
   watchEvents: function() {
     var events; 
 
-    Ballot.deployed().then(function (instance){
+    return Ballot.deployed().then(function (instance){
       events = instance.allEvents();
     }).then(function() {
-      events.watch(function(error, result){
+      return events.watch(function(error, result){
           if(!error){
-            console.log(result);
+            return result;
           }
     });
     });
@@ -62,6 +64,20 @@ module.exports = {
       return 'something went wrong during voting: ' + err;
     });
   },
+  getVoteCount : function(proposal){
+    var meta;
+    return Ballot.deployed().then(function(instance){
+      meta = instance;
+      return meta.getVoteCount(proposal);
+    }).then(function(result){
+      console.log('Votecount proposal '+ proposal + ' is: ' + result);
+      return result;
+    }).catch(function(err){
+      console.log('something went wrong during getVoteCount: ' + err);
+      return ('something went wrong during getVoteCount: ' + err);
+    });
+  }
+  ,
 
   winningProposal: function(){
     var meta;

@@ -27,7 +27,7 @@ export class Accounts extends React.Component {
         return null;
       }
 
-      return (<div><b>All accounts on this network</b> 
+      return (<div><h1>All accounts on this network</h1> 
       {this.state.response.map((acc,i) => <div key={i}>Account {i+1} :{acc}</div>)}
       </div>);
     }

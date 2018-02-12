@@ -1,11 +1,19 @@
 import React from 'react';
-
+import { Button, Icon, Label } from 'semantic-ui-react'
 
 export class Voting extends React.Component {
+
     state = {
         response: '',
-        transactions: []
+        transactions: [],
+        votecount0: '0',
+        votecount1: '0'
       };
+
+      componentDidMount() {
+        this.getVoteCounts0();
+        this.getVoteCounts1();
+      }
     
       callApiVote0 = () => {
         fetch('/api/ballot/vote/0',{method:'POST'})
@@ -16,11 +24,11 @@ export class Voting extends React.Component {
             response
           ]
         }))
-        .then(() => {this.props.winningproposal()});
+        .then(() => {this.props.winningproposal()})
+        .then(()=> this.getVoteCounts0())
       }; 
 
       callApiVote1 = () => {
-
         fetch('/api/ballot/vote/1',{method:'POST'})
         .then(res => res.json())
         .then(response =>  this.setState({
@@ -28,21 +36,49 @@ export class Voting extends React.Component {
             ...this.state.transactions,
             response
           ]
-        })).then(() => {this.props.winningproposal()});
+        })).then(() => {this.props.winningproposal()})        
+        .then(()=> this.getVoteCounts1());
+        ;
+      };
+
+      getVoteCounts0 = () => {
+        fetch('/api/ballot/count/0')
+        .then(res => res.json())
+        .then(response =>  this.setState({
+          votecount0: response
+        }));
+      };
+      getVoteCounts1 = () => {
+        fetch('/api/ballot/count/1')
+        .then(res => res.json())
+        .then(response =>  this.setState({
+          votecount1: response
+        }));
       };
 
     render() {
       return (
-      <div><h2>Let's start voting</h2>
-      <button onClick={this.callApiVote0}>Vote on 0</button>
-      <br></br>
-            <button onClick={this.callApiVote1}>Vote on 1</button>
-      <br></br>
+      <div><h1>Let's start voting</h1>
+
+<div>
+    <Button  as='div' labelPosition='right'>
+      <Button className='ledgerGreen'  onClick={this.callApiVote0}>
+        Ethereum
+      </Button>
+      <Label as='a' basic pointing='left'>{this.state.votecount0}</Label>
+    </Button>
+    <Button as='div' labelPosition='left' onClick={this.callApiVote1} >
+      <Label as='a' basic pointing='right'>{this.state.votecount1}</Label>
+      <Button className='ledgerGreen'>
+        Hyperledger Fabric
+      </Button>
+    </Button>
+  </div> 
         <div>
         <br></br>
 
           <h1>New transactions</h1>
-          {this.state.transactions.map(trans => <div>{trans}</div>)}
+          {this.state.transactions.map((trans,i) => <div key={i}>{trans}</div>)}
         </div>
       </div>
       );
