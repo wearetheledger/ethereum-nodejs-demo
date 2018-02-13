@@ -1,3 +1,8 @@
+
+
+
+
+
 const Web3 = require('web3');
 var web3 = new Web3();
 const provider = new web3.providers.HttpProvider('http://localhost:8545', 0, process.env.ETHERBASE,  process.env.PASSWORD);
@@ -28,23 +33,31 @@ module.exports = {
       console.log('Main account for sending transactions is : ' + account);
       }
     });
-
-    this.watchEvents().then(function(result){
-      console.log(result);
-    });
+    this.watchEvents();
   }, 
   watchEvents: function() {
-    var events; 
+    var events;
 
-    return Ballot.deployed().then(function (instance){
+    var WebSocketServer = require('ws').Server;
+    wss = new WebSocketServer({port: 40510})
+
+    wss.on('connection', function (ws) {
+    ws.on('message', function (message) {
+      console.log('received: %s', message)
+    })
+    Ballot.deployed().then(function (instance){
       events = instance.allEvents();
     }).then(function() {
-      return events.watch(function(error, result){
+      events.watch(function(error, result){
           if(!error){
-            return result;
+            console.log(result);
+            ws.send(result.transactionHash + '  HAS TYPE: ' + result.type + ' THE EVENT TRIGGERED IS: '+ result.event + ' FOR PROPOSAL: ' + result.args.proposal.toNumber());
           }
     });
-    });
+    });    
+    })
+
+
   },
   
   getAccounts: function(){

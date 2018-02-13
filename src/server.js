@@ -7,7 +7,6 @@ const Web3 = require('web3');
 const accounts = require('./routes/accounts');
 const ballot = require('./routes/ballot');
 
-
 const port = process.env.port || 3100;
 
 app.use(bodyParser.json());
