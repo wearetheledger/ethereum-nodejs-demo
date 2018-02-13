@@ -51,7 +51,8 @@ module.exports = {
       events.watch(function(error, result){
           if(!error){
             console.log(result);
-            ws.send(result.transactionHash + '  HAS TYPE: ' + result.type + ' THE EVENT TRIGGERED IS: '+ result.event + ' FOR PROPOSAL: ' + result.args.proposal.toNumber());
+            ws.send(result.transactionHash + '  HAS TYPE: ' + result.type + ' THE EVENT TRIGGERED IS: ' + result.event 
+            + ' FOR PROPOSAL: ' + ((result.args.proposal.toNumber() === 0) ? "ETHEREUM" : "HYPERLEDGER" ) );
           }
     });
     });    
@@ -98,11 +99,26 @@ module.exports = {
       meta = instance;
       return meta.winningProposal();
     }).then(function(result){
-      console.log('winning proposal: '+ result);
+      console.log('winning proposal: ' + result);
       return result;
     }).catch(function(err){
       console.log('something went wrong during winningProposal: ' + err);
       return ('something went wrong during winningProposal: ' + err);
     });
+  },
+
+  getPendingTransactions: function() {
+    // current mined block
+    return web3.eth.getBlock("pending").transactions;
+  },
+
+  getConfirmedTransactions: function() {
+    // latest block - current head of the blockchain
+    return web3.eth.getBlock("latest").transactions;
+  },
+
+  getLatestBlock: function() {
+    return web3.eth.getBlock("latest");
   }
+
 }

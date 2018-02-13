@@ -40,11 +40,7 @@ class App extends Component {
     return body;
   };
 
-  handleNewVote(draw) {
-
-    if (draw){
-      this.setState({response: 'is a draw'});      
-    }else {
+  handleNewVote() {  
 
     this.getWinningProposal()
     .then(res => {
@@ -55,7 +51,7 @@ class App extends Component {
     }
     })
     .catch(err => console.log(err));
-  }
+
 }
 
   render() {

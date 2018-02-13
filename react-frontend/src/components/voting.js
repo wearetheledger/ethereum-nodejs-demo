@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Label } from 'semantic-ui-react'
+import { Button, Label } from 'semantic-ui-react';
+import { Transactions } from './transactions';
 
 export class Voting extends React.Component {
 
@@ -24,8 +25,8 @@ export class Voting extends React.Component {
             response
           ]
         }))
-        .then(() => {this.props.winningproposal()})
-        .then(()=> this.getVoteCounts0())
+        //.then(() => {this.props.winningproposal()})
+        // .then(()=> this.getVoteCounts0())
       }; 
 
       callApiVote1 = () => {
@@ -36,10 +37,15 @@ export class Voting extends React.Component {
             ...this.state.transactions,
             response
           ]
-        })).then(() => {this.props.winningproposal()})        
-        .then(()=> this.getVoteCounts1());
+        }))//.then(() => {this.props.winningproposal()})        
+        // .then(()=> this.getVoteCounts1());
         ;
       };
+
+      updatevotecounts = () => {
+        this.getVoteCounts0();
+        this.getVoteCounts1();
+      }
 
       getVoteCounts0 = () => {
         fetch('/api/ballot/count/0')
@@ -48,6 +54,7 @@ export class Voting extends React.Component {
           votecount0: response
         }));
       };
+      
       getVoteCounts1 = () => {
         fetch('/api/ballot/count/1')
         .then(res => res.json())
@@ -59,6 +66,9 @@ export class Voting extends React.Component {
     render() {
       return (
       <div><h1>Let's start voting</h1>
+      <p> The values will be updated when the transaction is confirmed.
+       <br />It can take a while untill a submitted transaction is pending and then confirmed.
+      </p>
 
 <div>
     <Button  as='div' labelPosition='right'>
@@ -76,10 +86,10 @@ export class Voting extends React.Component {
   </div> 
         <div>
         <br></br>
-
-          <h1>New transactions</h1>
+          <h1>Submitted transactions</h1>
           {this.state.transactions.map((trans,i) => <div key={i}>{trans}</div>)}
         </div>
+        <Transactions updateWinningProposal={this.props.winningproposal} updatecounts={this.updatevotecounts} />
       </div>
       );
     }
