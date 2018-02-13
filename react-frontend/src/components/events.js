@@ -16,7 +16,7 @@ export class Events extends React.Component {
 
     render() {
         return (<div><h1>Fired events</h1> 
-          {this.state.events.map((ev,i) => <div key={i}>{ev}</div>)}
+          {this.state.events.map((ev,i) => <div className="eventsMapped" key={i}>{ev}</div>)}
               </div>);
     }
 
