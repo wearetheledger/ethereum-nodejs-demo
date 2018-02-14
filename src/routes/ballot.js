@@ -5,24 +5,22 @@ const bodyParser = require('body-parser');
 
 
 router.get('/', function(req, res) {
-    // do something
    blockchainService.winningProposal().then(function(result){
-    res.send("Winning proposal is: "+ result);
+     res.json(result);
   });
 });
 
 router.post('/vote/:id', function(req, res) {
-    // do something
    blockchainService.vote(req.params.id).then(function(result){
-    res.send("TransactionId: " +  result);
+    res.json(result);
   });
 });
 
-router.get('/vote/:id', function(req, res) {
-  // do something
- blockchainService.vote(req.params.id).then(function(result){
-  res.send("TransactionId: " +  result);
-});
+
+router.get('/count/:id', function(req, res) {
+  blockchainService.getVoteCount(req.params.id).then(function(result){
+    res.json(result);
+ });
 });
 
 module.exports = router;

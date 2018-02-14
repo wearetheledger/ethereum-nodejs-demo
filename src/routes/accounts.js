@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 
 
 router.get('/', function(req, res) {
-    res.send(blockchainService.getAccounts());
+    res.json(blockchainService.getAccounts())
 });
 
 module.exports = router;

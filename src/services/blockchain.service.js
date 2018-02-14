@@ -1,3 +1,8 @@
+
+
+
+
+
 const Web3 = require('web3');
 var web3 = new Web3();
 const provider = new web3.providers.HttpProvider('http://localhost:8545', 0, process.env.ETHERBASE,  process.env.PASSWORD);
@@ -28,21 +33,32 @@ module.exports = {
       console.log('Main account for sending transactions is : ' + account);
       }
     });
-
     this.watchEvents();
   }, 
   watchEvents: function() {
-    var events; 
+    var events;
 
+    var WebSocketServer = require('ws').Server;
+    wss = new WebSocketServer({port: 40510})
+
+    wss.on('connection', function (ws) {
+    ws.on('message', function (message) {
+      console.log('received: %s', message)
+    })
     Ballot.deployed().then(function (instance){
       events = instance.allEvents();
     }).then(function() {
       events.watch(function(error, result){
           if(!error){
             console.log(result);
+            ws.send(result.transactionHash + '  HAS TYPE: ' + result.type + ' THE EVENT TRIGGERED IS: ' + result.event 
+            + ' FOR PROPOSAL: ' + ((result.args.proposal.toNumber() === 0) ? "ETHEREUM" : "HYPERLEDGER" ) );
           }
     });
-    });
+    });    
+    })
+
+
   },
   
   getAccounts: function(){
@@ -62,6 +78,20 @@ module.exports = {
       return 'something went wrong during voting: ' + err;
     });
   },
+  getVoteCount : function(proposal){
+    var meta;
+    return Ballot.deployed().then(function(instance){
+      meta = instance;
+      return meta.getVoteCount(proposal);
+    }).then(function(result){
+      console.log('Votecount proposal '+ proposal + ' is: ' + result);
+      return result;
+    }).catch(function(err){
+      console.log('something went wrong during getVoteCount: ' + err);
+      return ('something went wrong during getVoteCount: ' + err);
+    });
+  }
+  ,
 
   winningProposal: function(){
     var meta;
@@ -69,11 +99,26 @@ module.exports = {
       meta = instance;
       return meta.winningProposal();
     }).then(function(result){
-      console.log('winning proposal: '+ result);
+      console.log('winning proposal: ' + result);
       return result;
     }).catch(function(err){
       console.log('something went wrong during winningProposal: ' + err);
       return ('something went wrong during winningProposal: ' + err);
     });
+  },
+
+  getPendingTransactions: function() {
+    // current mined block
+    return web3.eth.getBlock("pending").transactions;
+  },
+
+  getConfirmedTransactions: function() {
+    // latest block - current head of the blockchain
+    return web3.eth.getBlock("latest").transactions;
+  },
+
+  getLatestBlock: function() {à
+    return web3.eth.getBlock("latest");
   }
+
 }
