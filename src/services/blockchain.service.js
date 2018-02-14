@@ -1,5 +1,6 @@
 const Web3 = require('web3');
 var web3 = new Web3();
+const Url = require('url');
 const provider = new web3.providers.HttpProvider('http://localhost:8545', 0, process.env.ETHERBASE, process.env.PASSWORD);
 var account;
 var accounts;
@@ -8,6 +9,16 @@ var json = require("../truffle/build/contracts/SimpleBallot.json");
 // Step 2: Turn that contract into an abstraction I can use
 var contract = require("truffle-contract");
 var Ballot;
+
+var pendingTransactions = [];
+
+
+class CustomTransaction {
+  constructor(hash, send) {
+    this.hash = hash;
+    this.send = send;
+  }
+}
 
 module.exports = {
   init: function () {
@@ -34,32 +45,83 @@ module.exports = {
     var WebSocketServer = require('ws').Server;
     wss = new WebSocketServer({ port: 40510 })
 
-    wss.on('connection', function (ws) {
-      ws.on('message', function (message) {
+    wss.on('connection', function (ws, req) {
+
+      /*ws.on('message', function (message) {
         console.log('received: %s', message)
-      })
-      Ballot.deployed().then(function (instance) {
-        events = instance.allEvents();
-      }).then(function () {
-        events.watch(function (error, result) {
-          if (!error) {
-            console.log(result);
-            ws.send(result.transactionHash + '  HAS TYPE: ' + result.type + ' THE EVENT TRIGGERED IS: ' + result.event
-              + ' FOR PROPOSAL: ' + ((result.args.proposal.toNumber() === 0) ? "ETHEREUM" : "HYPERLEDGER"), function data(err) {
+      })*/
+
+      if (req.url === '/events') {
+        Ballot.deployed().then(function (instance) {
+          events = instance.allEvents();
+        }).then(function () {
+          events.watch(function (error, result) {
+            if (!error) {
+              console.log(result);
+              ws.send(result.transactionHash + '  HAS TYPE: ' + result.type + ' THE EVENT TRIGGERED IS: ' + result.event
+                + ' FOR PROPOSAL: ' + ((result.args.proposal.toNumber() === 0) ? "ETHEREUM" : "HYPERLEDGER"), function data(err) {
+                  if (err) {
+                    // Catch error probably made by refreshing page.
+                  };
+                });
+            }
+          });
+        });
+
+      }
+
+      if (req.url === '/pending') {
+        // check if transaction is pending and push through websocket 
+        setInterval(function () {
+
+
+          // check if transaction is pending and push through websocket 
+          pendingTransactions.forEach(ct => {
+           if (!ct.send) {
+             ws.send(ct.hash, function data(err) {
+              if (err) {
+                // Catch error probably made by refreshing page.
+              };
+            });
+             ct.send = true;
+           } 
+          });
+
+        }, 500)
+      }
+
+      if (req.url === '/confirmed') {
+        setInterval(function () {
+
+
+          // check if transaction is pending and push through websocket 
+          pendingTransactions.forEach(ct => {
+            receipt = web3.eth.getTransactionReceipt(ct.hash);
+            if (receipt != null) {
+              // confirmed
+              ws.send(ct.hash, function data(err) {
                 if (err) {
                   // Catch error probably made by refreshing page.
                 };
-              });
-          }
-        });
-      });
+              })
+            }
+            // delete from transaction
+            index = pendingTransactions.indexOf(ct);
+            pendingTransactions.splice(index);
+          });
+
+        }, 1000)
+
+
+      }
+
 
       ws.on('error', err => {
         // Catch error probably made by refreshing page.
       });
-      ws.on('close', function(){
+      ws.on('close', function () {
         console.log("client closed connection!");
-        });
+      });
     });
   },
 
@@ -71,7 +133,10 @@ module.exports = {
     var meta;
     return Ballot.deployed().then(function (instance) {
       meta = instance;
-      return meta.contract.justVote(proposal, { from: account });
+      transactionhash = meta.contract.justVote(proposal, { from: account });
+      ct = new CustomTransaction(transactionhash, false);
+      pendingTransactions.push(ct);
+      return transactionhash;
     }).then(function (result) {
       console.log('Vote succesfull: ' + result);
       return result;
