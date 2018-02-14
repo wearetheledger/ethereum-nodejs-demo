@@ -20,7 +20,6 @@ class App extends Component {
 
   componentDidMount() {
     this.getWinningProposal()
-      // .then(res => this.setState({ response: res }))
       .then(res => {
         if(res === '0') {
           this.setState({response: 'Ethereum'});
@@ -34,9 +33,7 @@ class App extends Component {
   getWinningProposal = async () => {
     const response = await fetch('/api/ballot');
     const body = await response.json();
-
     if (response.status !== 200) throw Error(body.message);
-
     return body;
   };
 
