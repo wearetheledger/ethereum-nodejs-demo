@@ -6,7 +6,7 @@ export class Events extends React.Component {
     events: []
   };
   componentDidMount(){
-    this.connection = new WebSocket('ws://localhost:40510');
+    this.connection = new WebSocket('ws://localhost:40510/events');
     this.connection.onmessage = evt => { 
       this.setState({
         events : this.state.events.concat([ evt.data ])
