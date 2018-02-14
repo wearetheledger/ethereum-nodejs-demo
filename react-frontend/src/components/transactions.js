@@ -4,8 +4,7 @@ export class Transactions extends React.Component {
 
     state = {
         pending: [],
-        confirmed: [],
-        latestUpdate: 0
+        confirmed: []
     };
 
     componentDidMount() {

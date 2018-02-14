@@ -5,7 +5,6 @@ import { Transactions } from './transactions';
 export class Voting extends React.Component {
 
   state = {
-    response: '',
     transactions: [],
     votecount0: '0',
     votecount1: '0'
@@ -24,9 +23,9 @@ export class Voting extends React.Component {
           ...this.state.transactions,
           response
         ]
-      }))
-    //.then(() => {this.props.winningproposal()})
-    // .then(()=> this.getVoteCounts0())
+      })).catch(err => {
+        console.log("API not available");
+      })
   };
 
   callApiVote1 = () => {
@@ -39,8 +38,7 @@ export class Voting extends React.Component {
         ]
       })).catch(err => {
         console.log("API not available");
-      })//.then(() => {this.props.winningproposal()})        
-      // .then(()=> this.getVoteCounts1());
+      })
       ;
   };
 
