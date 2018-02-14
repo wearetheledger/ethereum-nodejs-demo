@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.18;
 contract Ballot {
     
     event AlreadyVoted(
@@ -30,7 +30,7 @@ contract Ballot {
     Proposal[] proposals;
 
     /// Create a new ballot with $(_numProposals) different proposals.
-    function Ballot(uint8 _numProposals) {
+    function Ballot(uint8 _numProposals) public {
         chairperson = msg.sender;
         voters[chairperson].weight = 1;
         proposals.length = _numProposals;
@@ -38,13 +38,13 @@ contract Ballot {
 
     /// Give $(voter) the right to vote on this ballot.
     /// May only be called by $(chairperson).
-    function giveRightToVote(address voter) {
+    function giveRightToVote(address voter) public {
         if (msg.sender != chairperson || voters[voter].voted) { return;}
         voters[voter].weight = 1;
     }
 
     /// Delegate your vote to the voter $(to).
-    function delegate(address to) {
+    function delegate(address to) public {
         Voter storage sender = voters[msg.sender]; // assigns reference
         if (sender.voted) { return;}
         while (voters[to].delegate != address(0) && voters[to].delegate != msg.sender) {
@@ -61,7 +61,7 @@ contract Ballot {
     }
 
     /// Give a single vote to proposal $(proposal).
-    function vote(uint8 proposal) {
+    function vote(uint8 proposal) public {
         Voter storage sender = voters[msg.sender];
         if (sender.voted) {
             AlreadyVoted(msg.sender, sender.vote);
@@ -77,7 +77,7 @@ contract Ballot {
     }
     
     /// Give a single vote to proposal $(proposal).
-    function justVote(uint8 proposal) {
+    function justVote(uint8 proposal) public {
         if (proposal >= proposals.length) {
             IncorrectProposal(msg.sender, proposal);
             return;
@@ -86,7 +86,7 @@ contract Ballot {
         Voted(msg.sender,proposal);
     }
 
-    function winningProposal() constant returns (uint8 _winningProposal) {
+    function winningProposal() public constant returns (uint8 _winningProposal) {
         uint256 winningVoteCount = 0;
         for (uint8 proposal = 0; proposal < proposals.length; proposal++) {
             if (proposals[proposal].voteCount > winningVoteCount) {

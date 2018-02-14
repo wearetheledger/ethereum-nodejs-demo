@@ -24,7 +24,7 @@ export class Transactions extends React.Component {
 
                     response.forEach(element => {
                         // extra check for testrpc
-                        if(this.state.confirmed.indexOf(element)>= 0){
+                        if (this.state.confirmed.indexOf(element) >= 0) {
                             // do nothing
                         } else if (this.state.pending.indexOf(element) < 0) {
                             this.setState({
@@ -36,6 +36,8 @@ export class Transactions extends React.Component {
                         }
                     });
                 }
+            }).catch(err => {
+                console.log("API not available");
             })
     };
 
@@ -69,6 +71,8 @@ export class Transactions extends React.Component {
                         }
                     });
                 }
+            }).catch(err => {
+                console.log("API not available");
             })
 
     };
