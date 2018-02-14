@@ -46,10 +46,11 @@ module.exports = {
     wss = new WebSocketServer({ port: 40510 })
 
     wss.on('connection', function (ws, req) {
-
-      /*ws.on('message', function (message) {
+      // TODO: Better handling of refreshing page error
+      
+      ws.on('message', function (message) {
         console.log('received: %s', message)
-      })*/
+      });
 
       if (req.url === '/events') {
         Ballot.deployed().then(function (instance) {
