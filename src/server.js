@@ -19,9 +19,6 @@ app.use('/api/transactions',transactions);
 
 app.get('/', (req, res) =>{
   res.send('Service is running');
-})
-app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
 });
 
 app.listen(port, () => {

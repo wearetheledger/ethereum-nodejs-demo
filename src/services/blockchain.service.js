@@ -15,8 +15,6 @@ module.exports = {
     Ballot = contract(json);
     // Step 3: Provision the contract with a web3 provider
     Ballot.setProvider(provider);
-    // Ballot.setNetwork(1234);
-
     web3.eth.getAccounts(function (err, accs) {
       if (err != null) {
         console.log('There was an error fetching your accounts.');
@@ -122,7 +120,6 @@ module.exports = {
   },
 
   getLatestBlock: function () {
-    à
     return web3.eth.getBlock("latest");
   }
 

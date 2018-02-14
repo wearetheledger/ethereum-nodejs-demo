@@ -12,7 +12,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      response: ''
+      winning: ''
     };
     this.handleNewVote = this.handleNewVote.bind(this);
   }
@@ -20,12 +20,11 @@ class App extends Component {
 
   componentDidMount() {
     this.getWinningProposal()
-      // .then(res => this.setState({ response: res }))
       .then(res => {
         if(res === '0') {
-          this.setState({response: 'Ethereum'});
+          this.setState({winning: 'Ethereum'});
       } else if (res === '1') {
-        this.setState({response: 'Hyperledger Fabric'});
+        this.setState({winning: 'Hyperledger Fabric'});
       }
       })
       .catch(err => console.log(err));
@@ -34,9 +33,7 @@ class App extends Component {
   getWinningProposal = async () => {
     const response = await fetch('/api/ballot');
     const body = await response.json();
-
     if (response.status !== 200) throw Error(body.message);
-
     return body;
   };
 
@@ -45,9 +42,9 @@ class App extends Component {
     this.getWinningProposal()
     .then(res => {
       if(res === '0') {
-        this.setState({response: 'Ethereum'});
+        this.setState({winning: 'Ethereum'});
     } else if (res === '1') {
-      this.setState({response: 'Hyperledger Fabric'});
+      this.setState({winning: 'Hyperledger Fabric'});
     }
     })
     .catch(err => console.log(err));
@@ -70,7 +67,7 @@ class App extends Component {
             <Grid.Column>
               <Segment>
                 <div >
-                  <h1>Winning proposal is {this.state.response}</h1>
+                  <h1>Winning proposal is {this.state.winning}</h1>
                 </div>
               </Segment>
             </Grid.Column>
