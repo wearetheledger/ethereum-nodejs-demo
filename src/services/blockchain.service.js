@@ -117,7 +117,7 @@ module.exports = {
     return web3.eth.getBlock("latest").transactions;
   },
 
-  getLatestBlock: function() {
+  getLatestBlock: function() {à
     return web3.eth.getBlock("latest");
   }
 
