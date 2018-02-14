@@ -16,7 +16,7 @@ You'll need a local ethereum node running for this to work.
 6. Use ``yarn dev`` to start the react frontend app to interact with the nodejs server. Don't start the nodejs and react seperately
 7. Browse to localhost:3000 if it isn't started automatically in your browser
 
-# Deploy & interact with local ethereum node
+# Start application with react frontend and (local) ethereum node
 Change the account and password in the .env file to your etherbase account
 
 1. Start your local ethereum node. Be sure --RPC is enabled at port 8545
@@ -27,7 +27,7 @@ Change the account and password in the .env file to your etherbase account
 6. Use ``yarn dev`` to start the react frontend app to interact with the nodejs server. Don't start the nodejs and react seperately
 Note: Voting on testrpc will be instant, on a real ethereum network, it will take up to a few seconds
 
-# Deploy & interact with local ethereum node through nodejs without the frontend
+# Deploy & interact with (local) ethereum node through nodejs without the frontend
 Change the account and password in the .env file to your etherbase account
 
 1. Start your local ethereum node. Be sure --RPC is enabled at port 8545
