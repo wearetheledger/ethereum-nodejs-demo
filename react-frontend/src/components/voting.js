@@ -1,11 +1,9 @@
 import React from 'react';
 import { Button, Label } from 'semantic-ui-react';
-import { Transactions } from './transactions';
 
 export class Voting extends React.Component {
 
   state = {
-    response: '',
     transactions: [],
     votecount0: '0',
     votecount1: '0'
@@ -25,8 +23,11 @@ export class Voting extends React.Component {
           response
         ]
       }))
-    //.then(() => {this.props.winningproposal()})
-    // .then(()=> this.getVoteCounts0())
+      .then(() => { this.props.winningproposal() })
+      .then(() => this.getVoteCounts0())
+      .catch(err => {
+        console.log("API not available");
+      })
   };
 
   callApiVote1 = () => {
@@ -37,10 +38,11 @@ export class Voting extends React.Component {
           ...this.state.transactions,
           response
         ]
-      })).catch(err => {
+      })).then(() => { this.props.winningproposal() })
+      .then(() => this.getVoteCounts1())
+      .catch(err => {
         console.log("API not available");
-      })//.then(() => {this.props.winningproposal()})        
-      // .then(()=> this.getVoteCounts1());
+      })
       ;
   };
 
@@ -95,7 +97,6 @@ export class Voting extends React.Component {
           <h1>Submitted transactions</h1>
           {this.state.transactions.map((trans, i) => <div key={i}>{trans}</div>)}
         </div>
-        <Transactions updateWinningProposal={this.props.winningproposal} updatecounts={this.updatevotecounts} />
       </div>
     );
   }

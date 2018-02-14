@@ -15,7 +15,6 @@ module.exports = {
     Ballot = contract(json);
     // Step 3: Provision the contract with a web3 provider
     Ballot.setProvider(provider);
-    // Ballot.setNetwork(1234);
 
     web3.eth.getAccounts(function (err, accs) {
       if (err != null) {
@@ -27,41 +26,6 @@ module.exports = {
         account = accs[0];
         console.log('Main account for sending transactions is : ' + account);
       }
-    });
-    this.watchEvents();
-  },
-  watchEvents: function () {
-    var events;
-
-    var WebSocketServer = require('ws').Server;
-    wss = new WebSocketServer({ port: 40510 })
-
-    wss.on('connection', function (ws) {
-      ws.on('message', function (message) {
-        console.log('received: %s', message)
-      })
-      Ballot.deployed().then(function (instance) {
-        events = instance.allEvents();
-      }).then(function () {
-        events.watch(function (error, result) {
-          if (!error) {
-            console.log(result);
-            ws.send(result.transactionHash + '  HAS TYPE: ' + result.type + ' THE EVENT TRIGGERED IS: ' + result.event
-              + ' FOR PROPOSAL: ' + ((result.args.proposal.toNumber() === 0) ? "ETHEREUM" : "HYPERLEDGER"), function data(err) {
-                if (err) {
-                  // Catch error probably made by refreshing page.
-                };
-              });
-          }
-        });
-      });
-
-      ws.on('error', err => {
-        // Catch error probably made by refreshing page.
-      });
-      ws.on('close', function(){
-        console.log("client closed connection!");
-        });
     });
   },
 
@@ -109,21 +73,6 @@ module.exports = {
       console.log('something went wrong during winningProposal: ' + err);
       return ('something went wrong during winningProposal: ' + err);
     });
-  },
-
-  getPendingTransactions: function () {
-    // current mined block
-    return web3.eth.getBlock("pending").transactions;
-  },
-
-  getConfirmedTransactions: function () {
-    // latest block - current head of the blockchain
-    return web3.eth.getBlock("latest").transactions;
-  },
-
-  getLatestBlock: function () {
-    à
-    return web3.eth.getBlock("latest");
   }
 
 }
