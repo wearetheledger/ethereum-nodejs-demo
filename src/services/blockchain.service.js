@@ -122,7 +122,6 @@ module.exports = {
   },
 
   getLatestBlock: function () {
-    à
     return web3.eth.getBlock("latest");
   }
 
